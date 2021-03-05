@@ -13,12 +13,12 @@ const add = function() {
             counter++;
             const date = new Date();
             const year = date.getFullYear();
-            const month = `${date.getMonth()+1}`.padStart(2,0);
+            const month = `${date.getMonth()+1}`.padStart(2,0);  // 03 , 11 etc.
             const day =  `${date.getDate()}`.padStart(2,0);
 
             const html= 
                 `<div class="col task" id="task_${counter}">
-                    <div class="card text-danger border-danger mb-3">
+                    <div class="card border-danger mb-3">
                         <div class="card-body">
                             <div class="form-check form-switch">
                             <input
@@ -26,18 +26,33 @@ const add = function() {
                                 type="checkbox"
                                 id="taskInput_${counter}"
                             />
-                            <label class="form-check-label" for="task_${counter}">${taskInput}</label>
-                            <span style="float:right ">${day}/${month}/${year}</span>
-                            <span id="delete_${counter}">Delete</span>
+                            <label class="form-check-label mx-2" for="taskInput_${counter}">${taskInput}</label>
+                            <button class="btn-delete btn btn-sm btn-danger mx-3" style="float:right">Delete</button>
+                            <span style="float:right">${day}/${month}/${year}</span>
                             </div>
                         </div>
                 </div>`;
             taskList.insertAdjacentHTML('afterbegin', html);
-            const yy = document.querySelector(`#delete_${counter}`);
-            yy.addEventListener('click',function(){
-                 taskList.removeChild(yy.parentElement.parentElement.parentElement.parentElement);
-            })
-            document.querySelector("#task-input").value="";
+
+            const deleteButton = document.querySelector(`.btn-delete`);
+
+            deleteButton.addEventListener('click', function(){
+                 taskList.removeChild(deleteButton.parentElement.parentElement.parentElement.parentElement);  // a bit wierd :D 
+            });
+
+            const checkbox = document.querySelector(`.form-check-input`);
+            checkbox.addEventListener('click', function(){
+                const labels = [...document.querySelectorAll("label")];
+                const label = labels.find(lab => lab.getAttribute("for") === `${checkbox.id}`);
+                if (checkbox.checked) 
+                {
+                    label.style.textDecoration = "line-through";
+                }
+                else{
+                    label.style.textDecoration = "";
+                }
+            });
+            document.querySelector("#task-input").value = ""; // clear task input field
         }
     };
 
