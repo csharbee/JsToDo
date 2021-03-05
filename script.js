@@ -27,7 +27,7 @@ const add = function() {
                                 id="taskInput_${counter}"
                             />
                             <label class="form-check-label mx-2" for="taskInput_${counter}">${taskInput}</label>
-                            <button class="btn-delete btn btn-sm btn-danger mx-3" style="float:right">Delete</button>
+                            <button id="task_${counter}" class="btn-delete btn btn-sm btn-danger mx-3" style="float:right">Delete</button>
                             <span style="float:right">${day}/${month}/${year}</span>
                             </div>
                         </div>
@@ -37,7 +37,9 @@ const add = function() {
             const deleteButton = document.querySelector(`.btn-delete`);
 
             deleteButton.addEventListener('click', function(){
-                 taskList.removeChild(deleteButton.parentElement.parentElement.parentElement.parentElement);  // a bit wierd :D 
+                const taskList = [...document.querySelectorAll('.task')];
+                const selectedTask = taskList.find(t => t.id === deleteButton.id);
+                selectedTask.remove();
             });
 
             const checkbox = document.querySelector(`.form-check-input`);
