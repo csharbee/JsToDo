@@ -34,30 +34,44 @@ const add = function() {
                 </div>`;
             taskList.insertAdjacentHTML('afterbegin', html);
 
-            const deleteButton = document.querySelector(`.btn-delete`);
-
-            deleteButton.addEventListener('click', function(){
-                const taskList = [...document.querySelectorAll('.task')];
-                const selectedTask = taskList.find(t => t.id === deleteButton.id);
-                selectedTask.remove();
-            });
-
-            const checkbox = document.querySelector(`.form-check-input`);
-            checkbox.addEventListener('click', function(){
-                const labels = [...document.querySelectorAll("label")];
-                const label = labels.find(lab => lab.getAttribute("for") === `${checkbox.id}`);
-                if (checkbox.checked) 
-                {
-                    label.style.textDecoration = "line-through";
-                }
-                else{
-                    label.style.textDecoration = "";
-                }
-            });
             document.querySelector("#task-input").value = ""; // clear task input field
         }
-    };
+};
 
 addButton.addEventListener('click', add);
 
-const task = document.querySelectorAll('span');
+// Change theme css
+const themeBtn = document.querySelector('.btn-theme');
+themeBtn.addEventListener('click',function(){
+    const whiteStyle = "style.css";
+    const blackStyle = "style-black.css";
+    const style = document.querySelector('#style-sheet');
+    if(style.getAttribute("href")===whiteStyle){
+        style.setAttribute("href",blackStyle);
+    }
+    else{
+        style.setAttribute("href",whiteStyle);
+    }
+});
+
+
+taskList.addEventListener('click', function(e){
+
+    // delete Button Match
+    if (e.target.classList.contains('btn-delete')) {
+        const id = e.target.getAttribute('id');
+        document.querySelector(`#${id}`).remove();
+    }
+
+    // checkbox Match
+    if (e.target.classList.contains('form-check-input')) {
+        const labels = [...document.querySelectorAll("label")];
+        const label = labels.find(lab => lab.getAttribute("for") === `${e.target.getAttribute("id")}`);
+        if(e.target.checked){
+            label.style.textDecoration ="line-through";
+        }
+        else{
+            label.style.textDecoration = "";
+        }
+    }
+});
