@@ -57,10 +57,11 @@ themeBtn.addEventListener('click',function(){
 
 taskList.addEventListener('click', function(e){
 
+    const deleteBntId = e.target.closest('.btn-delete')?.getAttribute("id");
+
     // delete Button Match
-    if (e.target.classList.contains('btn-delete')) {
-        const id = e.target.getAttribute('id');
-        document.querySelector(`#${id}`).remove();
+    if (deleteBntId) {
+        document.querySelector(`#${deleteBntId}`).remove();
     }
 
     // checkbox Match
