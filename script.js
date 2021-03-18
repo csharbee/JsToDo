@@ -62,16 +62,23 @@ class App {
     }
     operation(e){
         const deleteBntId = e.target.closest('.btn-delete')?.getAttribute("id");
-
+        let selectedTask;
+         
         // delete Button Match
         if (deleteBntId) {
             document.querySelector(`#${deleteBntId}`).remove();
+            selectedTask = this.tasks.find(task => task.id === deleteBntId.slice(5));
+            let index = this.tasks.map(t=>t.id).indexOf(selectedTask.id);
+            if (index >= 0) {
+                this.tasks.splice( index, 1 );
+            }
         }
+
+        // checbbox Match
         if (e.target.classList.contains('form-check-input')) {
             let labels = [...document.querySelectorAll("label")];
             let label = labels.find(lab => lab.getAttribute("for") === `${e.target.getAttribute("id")}`);
-            
-            const selectedTask = this.tasks.find(task => task.id === e.target.getAttribute("id"));
+            selectedTask = this.tasks.find(task => task.id === e.target.getAttribute("id"));
             if(e.target.checked){
                 selectedTask.isCompleted = true;
                 label.style.textDecoration ="line-through";
