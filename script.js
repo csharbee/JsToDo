@@ -6,11 +6,25 @@ const taskList = document.querySelector(".task-list");
 const taskInput = document.querySelector("#task-input");
 const themeBtn = document.querySelector('.btn-theme');
 
+class Task {
+    id = uuidv4();
+    date = new Date();
+    constructor(description, isCompleted){
+        this.description = description;
+        this.isCompleted = isCompleted;
+        this._setDate();
+    }
+    _setDate(){
+        this.year = this.date.getFullYear();
+        this.month = `${this.date.getMonth()+1}`.padStart(2,0);  // 03 , 11 etc.
+        this.day =  `${this.date.getDate()}`.padStart(2,0);
+    }
+    _getFormatedDate(){
+        return `${this.day}/${this.month}/${this.year}`;
+    }
+}
 class App {
-    _counter = 0;
-    _taskInputValue = taskInput.value;
-    _date = new Date();
-
+    tasks = [];
     constructor(){
         this.operationInit();
     }
@@ -21,31 +35,28 @@ class App {
     }
 
     add(){
+        this._taskInputValue = taskInput.value;
         if (this._taskInputValue) {
-            this._counter++;
-        
-            const year = this._date.getFullYear();
-            const month = `${this._date.getMonth()+1}`.padStart(2,0);  // 03 , 11 etc.
-            const day =  `${this._date.getDate()}`.padStart(2,0);
-
-            const html= 
-                `<div class="col task" id="task_${this._counter}">
+            const task = new Task(this._taskInputValue, false);
+            const html = 
+                `<div class="col task" id="task_${task.id}">
                     <div class="card border-danger mb-3">
                         <div class="card-body">
                             <div class="form-check form-switch">
                             <input
                                 class="form-check-input"
                                 type="checkbox"
-                                id="taskInput_${this._counter}"
+                                id="${task.id}"
                             />
-                            <label class="form-check-label mx-2" for="taskInput_${this._counter}">${this._taskInputValue}</label>
-                            <button id="task_${this._counter}" class="btn-delete btn btn-sm btn-danger mx-3" style="float:right">Delete</button>
-                            <span style="float:right">${day}/${month}/${year}</span>
+                            <label class="form-check-label mx-2" for="${task.id}">${task.description}</label>
+                            <button id="task_${task.id}" class="btn-delete btn btn-sm btn-danger mx-3" style="float:right">Delete</button>
+                            <span style="float:right">${task._getFormatedDate()}</span>
                             </div>
                         </div>
                 </div>`;
             taskList.insertAdjacentHTML('afterbegin', html);
 
+            this.tasks.push(task);
             taskInput.value = ""; // clear task input field
         }
     }
@@ -59,10 +70,14 @@ class App {
         if (e.target.classList.contains('form-check-input')) {
             let labels = [...document.querySelectorAll("label")];
             let label = labels.find(lab => lab.getAttribute("for") === `${e.target.getAttribute("id")}`);
+            
+            const selectedTask = this.tasks.find(task => task.id === e.target.getAttribute("id"));
             if(e.target.checked){
+                selectedTask.isCompleted = true;
                 label.style.textDecoration ="line-through";
             }
             else{
+                selectedTask.isCompleted = false;
                 label.style.textDecoration = "";
             }
         }
